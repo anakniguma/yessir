@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Product, CartItem } from './types';
 import { products, categories } from './data/products';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
+  const [view, setView] = useState<'customer' | 'owner'>('customer');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -11,6 +13,11 @@ function App() {
   const [isCheckout, setIsCheckout] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Owner Dashboard View
+  if (view === 'owner') {
+    return <AdminDashboard onBackToStore={() => setView('customer')} />;
+  }
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -354,14 +361,22 @@ function App() {
                 <p className="text-xs text-stone-500 hidden sm:block">Specialty Coffee Roasters</p>
               </div>
             </div>
-            <button onClick={() => setIsCartOpen(true)} className="relative p-2.5 bg-stone-100 hover:bg-stone-200 rounded-xl transition">
-              <svg className="w-5 h-5 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-              </svg>
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-amber-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{cartCount}</span>
-              )}
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={() => setView('owner')} className="p-2.5 bg-stone-100 hover:bg-stone-200 rounded-xl transition" title="Owner Dashboard">
+                <svg className="w-5 h-5 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
+              <button onClick={() => setIsCartOpen(true)} className="relative p-2.5 bg-stone-100 hover:bg-stone-200 rounded-xl transition">
+                <svg className="w-5 h-5 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                </svg>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-amber-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{cartCount}</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -510,7 +525,15 @@ function App() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-stone-700 text-center text-sm text-stone-500">
-            © 2026 Ember & Bloom Coffee Co. All rights reserved.
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+              <span>© 2026 Ember & Bloom Coffee Co. All rights reserved.</span>
+              <button onClick={() => setView('owner')} className="text-stone-400 hover:text-amber-400 text-sm transition flex items-center gap-1">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Owner Dashboard
+              </button>
+            </div>
           </div>
         </div>
       </footer>
