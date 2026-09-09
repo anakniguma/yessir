@@ -14,11 +14,6 @@ function App() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Owner Dashboard View
-  if (view === 'owner') {
-    return <AdminDashboard onBackToStore={() => setView('customer')} />;
-  }
-
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -36,6 +31,11 @@ function App() {
   const cartCount = useMemo(() => {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
   }, [cart]);
+
+  // Owner Dashboard View - rendered AFTER all hooks
+  if (view === 'owner') {
+    return <AdminDashboard onBackToStore={() => setView('customer')} />;
+  }
 
   const addToCart = (product: Product) => {
     setCart(prev => {
